@@ -1,3 +1,4 @@
+from pickle import FALSE
 import pygame
 from pathlib import Path
 
@@ -31,6 +32,14 @@ def check_winner(turn, matrix):
         return True
     return False
 
+def reset_game(matrix):
+    turn = "X"
+    turn_count = 0
+    game_over = False
+    for row in range(len(matrix)):
+        for col in range(len(matrix)):
+            matrix[row][col] = ""
+    return matrix, turn, turn_count, game_over
 
 # Initialize pygame and set a size of the screen
 pygame.init()
@@ -73,14 +82,15 @@ table = [
 turn = 'X'
 message = "Uy"
 game_over = False
+main_loop = False
 turn_count = 0
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 60)
-while not game_over:
-    clock.tick(10)
+while not main_loop:
+    clock.tick(30)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            game_over = True
+            main_loop = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouseX, mouseY = event.pos
             if 0 <= mouseX < width and 0 <= mouseY < height:
@@ -103,7 +113,11 @@ while not game_over:
         text_surface = font.render(message, True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=(width // 2, height // 2))
         screen.blit(text_surface, text_rect)
+        pygame.display.update()
+        pygame.time.delay(2000)
+        table, turn, turn_count, game_over = reset_game(table)
 
     pygame.display.update()
-pygame.time.delay(1000)
+    
+pygame.time.delay(2000)
 pygame.quit()
