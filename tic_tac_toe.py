@@ -71,9 +71,11 @@ table = [
 ]
 
 turn = 'X'
+message = "Uy"
 game_over = False
 turn_count = 0
 clock = pygame.time.Clock()
+font = pygame.font.Font(None, 60)
 while not game_over:
     clock.tick(10)
     for event in pygame.event.get():
@@ -88,11 +90,19 @@ while not game_over:
                     table[row][col] = turn
                     turn_count += 1
                 if check_winner(turn, table):
+                    message = f"{"Miku" if turn == 'X' else 'Teto'} wins!"
                     game_over = True
                 elif turn_count == 9:
+                    message = "Draw!"
                     game_over = True
                 turn = 'O' if turn == 'X' else 'X'
     graph_coord(coord, table)
-    pygame.display.update()
+    
+    if game_over:
+        text_surface = font.render(message, True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(width // 2, height // 2))
+        screen.blit(text_surface, text_rect)
 
+    pygame.display.update()
+pygame.time.delay(1000)
 pygame.quit()
