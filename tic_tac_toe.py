@@ -1,5 +1,5 @@
 import pygame
-
+from pathlib import Path
 
 def graph_coord(coord_matrix, table):
     screen.blit(wallpaper, (0,0))
@@ -39,10 +39,10 @@ width, height = 768, 768
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Tic Tac Toe")
 
-# Set the images we'll use
-wallpaper = pygame.image.load(r'static\tictactoe_background.png')
-ex = pygame.image.load(r'static\hatsune_pear.png')
-circle = pygame.image.load(r'static\teto_pear.png')
+# Set the images we'll use using path for other systems too
+wallpaper = pygame.image.load(str(Path('.') / 'static' / 'tictactoe_background.png'))
+ex = pygame.image.load(str(Path('.') / 'static' / 'hatsune_pear.png'))
+circle = pygame.image.load(str(Path('.') / 'static' / 'teto_pear.png'))
 
 # Size of the icons
 cell_size = width // 3
