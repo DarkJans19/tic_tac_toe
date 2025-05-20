@@ -89,13 +89,14 @@ while not game_over:
                 if table[row][col] == "":
                     table[row][col] = turn
                     turn_count += 1
-                if check_winner(turn, table):
-                    message = f"{"Miku" if turn == 'X' else 'Teto'} wins!"
-                    game_over = True
-                elif turn_count == 9:
-                    message = "Draw!"
-                    game_over = True
-                turn = 'O' if turn == 'X' else 'X'
+                    if check_winner(turn, table):
+                        message = f"{"Miku" if turn == 'X' else 'Teto'} wins!"
+                        game_over = True
+                    elif turn_count == 9:
+                        message = "Draw!"
+                        game_over = True
+                    else:
+                        turn = 'O' if turn == 'X' else 'X'
     graph_coord(coord, table)
     
     if game_over:
