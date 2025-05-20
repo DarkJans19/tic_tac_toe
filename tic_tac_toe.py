@@ -34,7 +34,9 @@ def check_winner(turn, matrix):
 
 # Initialize pygame and set a size of the screen
 pygame.init()
-screen = pygame.display.set_mode((450, 450))
+
+width, height = 768, 768
+screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Tic Tac Toe")
 
 # Set the images we'll use
@@ -42,15 +44,25 @@ wallpaper = pygame.image.load(r'static\tictactoe_background.png')
 ex = pygame.image.load(r'static\hatsune_pear.png')
 circle = pygame.image.load(r'static\teto_pear.png')
 
-# Scale the images
-wallpaper = pygame.transform.scale(wallpaper, (450, 450))
-ex = pygame.transform.scale(ex, (110, 110))
-circle = pygame.transform.scale(circle, (110, 110))
+# Size of the icons
+cell_size = width // 3
+icon_margin = 40
+image_size = cell_size - icon_margin
 
-coord_matrix = [[(40,50), (150,50), (260,50)],
-        [(40,160), (150,160), (260,160)],
-        [(40,270), (150,270), (260,270)]
-        ]
+# Scale the pictures
+wallpaper = pygame.transform.scale(wallpaper, (width, height))
+ex = pygame.transform.scale(ex, (image_size, image_size))
+circle = pygame.transform.scale(circle, (image_size, image_size))
+
+# Calculate the coords
+coord = []
+for row in range(3):
+    row_cords = []
+    for col in range(3):
+        x = col * cell_size + (cell_size - image_size) // 2
+        y = row * cell_size + (cell_size - image_size) // 2
+        row_cords.append((x, y))
+    coord.append(row_cords)
 
 table = [
     ["", "", ""],
@@ -60,23 +72,27 @@ table = [
 
 turn = 'X'
 game_over = False
+turn_count = 0
 clock = pygame.time.Clock()
 while not game_over:
-    clock.tick(30)
+    clock.tick(10)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_over = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouseX, mouseY = event.pos
-            if (mouseX > 40 and mouseX < 360) and (mouseY > 50 and mouseY < 380):
-                col = (mouseX - 40) // 110
-                row = (mouseY - 50) // 110
+            if 0 <= mouseX < width and 0 <= mouseY < height:
+                col = mouseX // cell_size
+                row = mouseY // cell_size
                 if table[row][col] == "":
                     table[row][col] = turn
+                    turn_count += 1
                 if check_winner(turn, table):
                     game_over = True
+                elif turn_count == 9:
+                    game_over = True
                 turn = 'O' if turn == 'X' else 'X'
-    graph_coord(coord_matrix, table)
+    graph_coord(coord, table)
     pygame.display.update()
 
 pygame.quit()
