@@ -97,9 +97,9 @@ text_rect = text_surface.get_rect(center=(width_reset_button // 2, height_reset_
 turn = 'X'
 message = "Uy"
 game_over = False
+game_ended = False
 turn_count = 0
 clock = pygame.time.Clock()
-
 
 while not game_over:
     clock.tick(30)
@@ -122,19 +122,22 @@ while not game_over:
                     if check_winner(turn, table):
                         message = f"{"Miku" if turn == 'X' else 'Teto'} wins!"
                         game_over = True
+                        game_ended = True
                     elif turn_count == 9:
                         message = "Draw!"
                         game_over = True
+                        game_ended = True
                     else:
                         turn = 'O' if turn == 'X' else 'X'
     graph_coord(coord, table)
     screen.blit(button_surface, rect_button.topleft)
     screen.blit(text_surface, rect_button.move(text_rect.topleft))
-    if game_over:
+    if game_over and game_ended:
         text_surface = font.render(message, True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=(width // 2, height // 2))
         screen.blit(text_surface, text_rect)
     pygame.display.update()
 
-pygame.time.delay(2000)
+if game_ended:
+    pygame.time.delay(2000)
 pygame.quit()
