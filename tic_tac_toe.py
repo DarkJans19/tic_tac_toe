@@ -80,7 +80,6 @@ table = [
 
 font = pygame.font.Font(None, 60)
 
-
 # Make reset button
 width_reset_button = 200
 height_reset_button = 50
@@ -91,29 +90,30 @@ rect_button = pygame.Rect(position_button_x, position_button_y, width_reset_butt
 # Crear una Surface con canal alfa (RGBA)
 button_surface = pygame.Surface((width_reset_button, height_reset_button), pygame.SRCALPHA)
 button_surface.fill((255, 255, 255, 30))  # 120 es el nivel de transparencia (0=transparente, 255=opaco)
-text_surface = font.render("Reset", True, (0, 0, 0))
-text_rect = text_surface.get_rect(center=(width_reset_button // 2, height_reset_button // 2))
+button_text_surface = font.render("Reset", True, (0, 0, 0))
+button_text_rect = button_text_surface.get_rect(center=(width_reset_button // 2, height_reset_button // 2))
 
+# Variables
 turn = 'X'
-message = "Uy"
 game_over = False
 game_ended = False
+running = True
 turn_count = 0
-clock = pygame.time.Clock()
+message = ""
 
-while not game_over:
+clock = pygame.time.Clock()
+while running:
     clock.tick(30)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            game_over = True
+            running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouseX, mouseY = event.pos
             if position_button_x <= mouseX <= position_button_x + width_reset_button and position_button_y <= mouseY <= position_button_y + height_reset_button:
                 table, turn, turn_count, game_over = reset_game(table)
-                pygame.display.update()
-                pygame.time.delay(1000)
+                game_ended = False
                 continue
-            if 0 <= mouseX < width and 0 <= mouseY < height:
+            if not game_over and 0 <= mouseX < width and 0 <= mouseY < height:
                 col = mouseX // cell_size
                 row = mouseY // cell_size
                 if table[row][col] == "":
@@ -131,13 +131,15 @@ while not game_over:
                         turn = 'O' if turn == 'X' else 'X'
     graph_coord(coord, table)
     screen.blit(button_surface, rect_button.topleft)
-    screen.blit(text_surface, rect_button.move(text_rect.topleft))
-    if game_over and game_ended:
+    screen.blit(button_text_surface, rect_button.move(button_text_rect.topleft))
+    if game_over:
         text_surface = font.render(message, True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=(width // 2, height // 2))
         screen.blit(text_surface, text_rect)
     pygame.display.update()
+    if game_ended:
+        pygame.time.delay(2000)
+        game_ended = False
 
-if game_ended:
-    pygame.time.delay(2000)
+
 pygame.quit()
