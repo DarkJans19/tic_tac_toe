@@ -84,10 +84,12 @@ font = pygame.font.Font(None, 60)
 width_reset_button = 200
 height_reset_button = 50
 
+# Stablish the dimensions of the button
 position_button_x = (width - width_reset_button)//2
 position_button_y = height - height_reset_button - 10
 rect_button = pygame.Rect(position_button_x, position_button_y, width_reset_button, height_reset_button)
-# Crear una Surface con canal alfa (RGBA)
+
+# Create a surface with RGBA
 button_surface = pygame.Surface((width_reset_button, height_reset_button), pygame.SRCALPHA)
 button_surface.fill((255, 255, 255, 30))  # 120 es el nivel de transparencia (0=transparente, 255=opaco)
 button_text_surface = font.render("Reset", True, (0, 0, 0))
@@ -140,6 +142,5 @@ while running:
     if game_ended:
         pygame.time.delay(2000)
         game_ended = False
-
 
 pygame.quit()
